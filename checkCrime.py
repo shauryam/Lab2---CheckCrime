@@ -20,10 +20,16 @@ class HelloWorldService(ServiceBase):
         response = {}
         total_crimes = len(data["crimes"])
         response["total_crimes"] = total_crimes
-        timeCount = eventTimeCounts(data)
         crimeTypeCount = crimeType(data)
         crimePlaces = topThree(data)
-        return crimePlaces
+        eventTimes = eventTimeCounts(data)
+        report={
+            "total_crime":total_crimes,
+            "crime_type_count": crimeTypeCount,
+            "event_time_count": eventTimes,
+            "the_most_dangerous_streets": []
+        }
+        return report
 
 
 application = Application([HelloWorldService],
