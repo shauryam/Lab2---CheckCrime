@@ -1,10 +1,8 @@
-import urllib2
-from collections import Counter
 
+from collections import Counter
 import requests
-from flask import jsonify
-from spyne import Application, AnyDict, json
-from spyne import ServiceBase, Float, Iterable
+from spyne import Application, AnyDict
+from spyne import ServiceBase, Float
 from spyne import srpc
 from spyne.protocol.http import HttpRpc
 from spyne.protocol.json import JsonDocument
@@ -27,7 +25,7 @@ class HelloWorldService(ServiceBase):
             "total_crime":total_crimes,
             "crime_type_count": crimeTypeCount,
             "event_time_count": eventTimes,
-            "the_most_dangerous_streets": []
+            "the_most_dangerous_streets": crimePlaces
         }
         return report
 
@@ -91,10 +89,22 @@ def topThree(data):
     crimePlaces = []
     for crime in crimes:
         place = crime["address"]
+        place = place.split(" BLOCK ")[-1]
+        place = place.split("BLOCK ")[-1]
+        place = place.split(" OF ")[-1]
+        place = place.split("OF ")[-1]
+        place = place.split(" & ")[-1]
+        place = place.split("& ")[-1]
+
         crimePlaces.append(place)
 
     crimePlaces = Counter(crimePlaces)
-    return crimePlaces
+    crimePlaces = crimePlaces.most_common(3)
+    temp = []
+    for crime in crimePlaces:
+        temp.append(crime[0])
+
+    return temp
 
 if __name__ == '__main__':
     # You can use any Wsgi server. Here, we chose

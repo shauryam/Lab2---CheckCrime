@@ -1,0 +1,6 @@
+collections
+requests
+sypne
+spyne.protocol.json
+spyne.protocol.http
+spyne.protocol.wsgi
